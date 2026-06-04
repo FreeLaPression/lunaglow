@@ -8,409 +8,113 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{
-  background:#060606;
-  color:#fff;
-  font-family:'Syne',sans-serif;
-  overflow-x:hidden;
-  cursor:none;
-}
+body{background:#060606;color:#fff;font-family:'Syne',sans-serif;overflow-x:hidden;}
+@media(pointer:fine){body{cursor:none;}.cursor,.cursor-ring{display:block!important;}}
+.cursor{display:none;position:fixed;width:10px;height:10px;background:#FF1744;border-radius:50%;pointer-events:none;z-index:99999;mix-blend-mode:difference;}
+.cursor-ring{display:none;position:fixed;width:36px;height:36px;border:1.5px solid rgba(255,255,255,0.4);border-radius:50%;pointer-events:none;z-index:99998;transition:width .2s,height .2s,border-color .2s;}
+.cursor-ring.hov{width:56px;height:56px;border-color:#FF1744;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.45;}
 
-/* CURSOR */
-.cursor{
-  position:fixed;width:10px;height:10px;
-  background:#FF1744;border-radius:50%;
-  pointer-events:none;z-index:99999;
-  mix-blend-mode:difference;
-  transition:transform 0.1s;
-}
-.cursor-ring{
-  position:fixed;width:36px;height:36px;
-  border:1.5px solid rgba(255,255,255,0.4);
-  border-radius:50%;pointer-events:none;z-index:99998;
-}
-.cursor-ring.hover{width:60px;height:60px;border-color:#FF1744;}
+nav{position:fixed;top:0;left:0;right:0;padding:20px 5vw;display:flex;justify-content:space-between;align-items:center;z-index:1000;mix-blend-mode:difference;}
+.nav-logo{font-family:'Anton',sans-serif;font-size:20px;letter-spacing:.15em;color:#fff;}
+.nav-cta{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.7);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:2px;}
 
-/* NOISE OVERLAY */
-body::after{
-  content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:9999;opacity:0.5;
-}
+/* FRUIT SVG */
+.fruit-svg{position:absolute;pointer-events:none;user-select:none;}
 
-/* NAV */
-nav{
-  position:fixed;top:0;left:0;right:0;
-  padding:24px 40px;
-  display:flex;justify-content:space-between;align-items:center;
-  z-index:1000;
-  mix-blend-mode:difference;
-}
-.nav-logo{
-  font-family:'Anton',sans-serif;
-  font-size:22px;letter-spacing:0.15em;
-  color:#fff;
-}
-.nav-cta{
-  font-size:12px;letter-spacing:0.3em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,0.6);
-  text-decoration:none;
-  border-bottom:1px solid rgba(255,255,255,0.3);
-  padding-bottom:2px;
-  transition:color 0.2s;
-}
-
-/* HERO */
-#hero{
-  height:100vh;min-height:700px;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  position:relative;overflow:hidden;
-}
-
-.blob{
-  position:absolute;border-radius:50%;
-  filter:blur(80px);pointer-events:none;
-  mix-blend-mode:screen;
-}
-
-.hero-eyebrow{
-  font-size:11px;letter-spacing:0.5em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,0.35);
-  margin-bottom:20px;position:relative;z-index:2;
-}
-
-.hero-title{
-  font-family:'Anton',sans-serif;
-  font-size:clamp(90px,20vw,260px);
-  line-height:0.82;text-align:center;
-  position:relative;z-index:2;
-  letter-spacing:-0.01em;
-}
-.hero-title .t1{
-  display:block;color:#FF1744;
-}
-.hero-title .t2{
-  display:block;
-  -webkit-text-stroke:2px rgba(255,255,255,0.25);
-  color:transparent;
-}
-
-.hero-sub{
-  font-size:clamp(13px,1.5vw,16px);
-  letter-spacing:0.35em;text-transform:uppercase;
-  color:rgba(255,255,255,0.4);
-  margin-top:28px;position:relative;z-index:2;
-}
-
-.hero-pill{
-  margin-top:48px;position:relative;z-index:2;
-  display:inline-flex;align-items:center;gap:14px;
-  background:rgba(255,23,68,0.12);
-  border:1px solid rgba(255,23,68,0.4);
-  padding:16px 40px;
-  border-radius:100px;
-  font-family:'Anton',sans-serif;font-size:17px;
-  letter-spacing:0.08em;text-decoration:none;color:#fff;
-  transition:background 0.3s,border-color 0.3s;
-}
-.hero-pill:hover{
-  background:rgba(255,23,68,0.25);
-  border-color:#FF1744;
-}
+/* ── HERO ── */
+#hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:100px 5vw 80px;background:#060606;transition:background 1s;}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;mix-blend-mode:screen;}
+.hero-eyebrow{font-size:clamp(10px,2vw,12px);letter-spacing:.5em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:16px;position:relative;z-index:2;}
+.hero-title{font-family:'Anton',sans-serif;font-size:clamp(80px,22vw,260px);line-height:.82;text-align:center;position:relative;z-index:2;}
+.hero-title .t1{display:block;color:#FF1744;}
+.hero-title .t2{display:block;-webkit-text-stroke:2px rgba(255,255,255,.2);color:transparent;}
+.hero-sub{font-size:clamp(11px,1.8vw,15px);letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:24px;position:relative;z-index:2;text-align:center;}
+.hero-pill{margin-top:40px;position:relative;z-index:2;display:inline-flex;align-items:center;gap:12px;background:rgba(255,23,68,.12);border:1px solid rgba(255,23,68,.5);padding:14px 36px;border-radius:100px;font-family:'Anton',sans-serif;font-size:clamp(14px,2vw,17px);letter-spacing:.08em;text-decoration:none;color:#fff;transition:background .3s;}
+.hero-pill:hover{background:rgba(255,23,68,.28);}
 .hero-pill span{color:#FF1744;}
+.scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.2);font-size:10px;letter-spacing:.4em;text-transform:uppercase;z-index:2;}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,23,68,.6),transparent);}
 
-.scroll-hint{
-  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:10px;
-  color:rgba(255,255,255,0.2);
-  font-size:10px;letter-spacing:0.4em;text-transform:uppercase;
-  z-index:2;
-}
-.scroll-line{
-  width:1px;height:50px;
-  background:linear-gradient(to bottom, rgba(255,23,68,0.6), transparent);
-}
+/* ── MARQUEE ── */
+.marquee-wrap{overflow:hidden;padding:28px 0;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);}
+.marquee-track{display:flex;white-space:nowrap;animation:march 30s linear infinite;}
+.m-word{font-family:'Anton',sans-serif;font-size:clamp(28px,4.5vw,52px);color:rgba(255,255,255,.6);padding:0 24px;}
+.m-word.hot{color:#FF1744;}
+.m-dot{font-family:'Anton',sans-serif;font-size:clamp(28px,4.5vw,52px);color:rgba(255,23,68,.5);padding:0 10px;}
+@keyframes march{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-/* MARQUEE */
-.marquee-wrap{
-  overflow:hidden;
-  padding:32px 0;
-  border-top:1px solid rgba(255,255,255,0.06);
-  border-bottom:1px solid rgba(255,255,255,0.06);
-  margin:0;
-}
-.marquee-track{
-  display:flex;white-space:nowrap;
-  animation:march 25s linear infinite;
-}
-.marquee-track:hover{animation-play-state:paused;}
-.m-word{
-  font-family:'Anton',sans-serif;
-  font-size:clamp(36px,5vw,56px);
-  color:rgba(255,255,255,0.06);
-  padding:0 32px;
-  transition:color 0.3s;
-}
-.m-word.hot{color:#FF1744;opacity:0.7;}
-.m-dot{color:rgba(255,23,68,0.5);padding:0 16px;}
-@keyframes march{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(-50%);}
-}
+/* ── SHADES ── section bg shifts to deep purple */
+#shades{padding:100px 5vw;position:relative;overflow:hidden;background:#0a0010;}
+.section-head{font-family:'Anton',sans-serif;font-size:clamp(42px,8vw,110px);line-height:.88;margin-bottom:60px;}
+.dim{-webkit-text-stroke:1px rgba(255,255,255,.2);color:transparent;}
+.shades-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+@media(max-width:700px){.shades-grid{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:701px) and (max-width:900px){.shades-grid{grid-template-columns:repeat(3,1fr);}}
+.shade-card{aspect-ratio:3/4;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:14px 10px;position:relative;overflow:hidden;border:1px solid transparent;transition:transform .35s cubic-bezier(.34,1.56,.64,1),border-color .3s;}
+.shade-card:hover,.shade-card:active{transform:scale(1.07) rotate(-2deg);}
+.shade-glow-ring{position:absolute;width:65%;aspect-ratio:1;border-radius:50%;top:16%;left:50%;transform:translateX(-50%);opacity:.18;filter:blur(18px);}
+.shade-glow{position:absolute;width:65%;aspect-ratio:1;border-radius:50%;top:16%;left:50%;transform:translateX(-50%);opacity:.9;}
+.shade-name{font-family:'Anton',sans-serif;font-size:clamp(10px,1.2vw,13px);letter-spacing:.03em;text-align:center;position:relative;z-index:2;line-height:1.2;}
+.shade-code{font-size:10px;letter-spacing:.2em;color:rgba(255,255,255,.3);position:relative;z-index:2;margin-top:3px;}
 
-/* SHADES */
-#shades{
-  padding:120px 40px;
-  max-width:1300px;margin:0 auto;
-}
-.section-head{
-  font-family:'Anton',sans-serif;
-  font-size:clamp(52px,9vw,110px);
-  line-height:0.88;
-  margin-bottom:70px;
-}
-.section-head .dim{
-  -webkit-text-stroke:1px rgba(255,255,255,0.2);
-  color:transparent;
-}
+/* ── PHOTOS ── section bg shifts to deep cherry */
+#product-photos{padding:100px 5vw;position:relative;overflow:hidden;background:#0f0000;}
+.photos-head{font-family:'Anton',sans-serif;font-size:clamp(36px,6vw,80px);line-height:.9;margin-bottom:12px;}
+.photos-sub{font-size:13px;color:rgba(255,255,255,.3);letter-spacing:.25em;text-transform:uppercase;margin-bottom:48px;}
+.photos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:600px){.photos-grid{grid-template-columns:1fr 1fr;gap:10px;}}
+.photo-slot{aspect-ratio:3/4;border-radius:16px;overflow:hidden;position:relative;background:#180808;border:1px dashed rgba(255,23,68,.25);}
+.photo-slot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s;}
+.photo-slot:hover img{transform:scale(1.06);}
+.photo-slot.empty{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;}
+.photo-slot.empty .ph-icon{opacity:.25;}
+.photo-slot.empty .ph-label{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.2);}
+.photo-slot.featured{grid-column:span 2;aspect-ratio:16/9;}
+@media(max-width:600px){.photo-slot.featured{grid-column:span 2;}}
 
-.shades-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:16px;
-}
-.shade-card{
-  aspect-ratio:3/4;
-  border-radius:20px;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:flex-end;
-  padding:18px 12px;
-  position:relative;overflow:hidden;
-  border:1px solid transparent;
-  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),border-color 0.3s;
-  cursor:none;
-}
-.shade-card:hover{
-  transform:scale(1.06) rotate(-1.5deg);
-}
-.shade-glow{
-  position:absolute;
-  width:70%;aspect-ratio:1;border-radius:50%;
-  top:18%;left:50%;transform:translateX(-50%);
-  opacity:0.85;
-  transition:opacity 0.3s;
-}
-.shade-card:hover .shade-glow{opacity:1;}
-.shade-glow-ring{
-  position:absolute;
-  width:70%;aspect-ratio:1;border-radius:50%;
-  top:18%;left:50%;transform:translateX(-50%);
-  opacity:0.2;filter:blur(20px);
-}
-.shade-name{
-  font-family:'Anton',sans-serif;
-  font-size:clamp(11px,1.1vw,14px);
-  letter-spacing:0.04em;
-  text-align:center;
-  position:relative;z-index:2;
-  line-height:1.2;
-}
-.shade-code{
-  font-size:10px;letter-spacing:0.25em;
-  color:rgba(255,255,255,0.3);
-  position:relative;z-index:2;
-  margin-top:3px;
-}
-
-/* PACK */
-#pack{
-  padding:120px 40px;
-  position:relative;overflow:hidden;
-}
-.pack-bg-text{
-  position:absolute;
-  font-family:'Anton',sans-serif;
-  font-size:clamp(160px,28vw,380px);
-  color:rgba(255,255,255,0.018);
-  white-space:nowrap;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  pointer-events:none;letter-spacing:-0.02em;
-  user-select:none;
-}
-
-.pack-inner{
-  max-width:1200px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:80px;align-items:center;
-}
-
-.pack-tubes{
-  display:flex;align-items:center;
-  justify-content:center;gap:24px;
-  position:relative;
-}
-.tube{
-  width:90px;height:220px;
-  border-radius:45px;
-  position:relative;
-  flex-shrink:0;
-}
-.tube::before{
-  content:'';
-  position:absolute;
-  top:12px;left:12px;right:12px;
-  height:35%;
-  border-radius:30px;
-  background:rgba(255,255,255,0.15);
-}
-.tube-label{
-  position:absolute;
-  bottom:-40px;left:50%;transform:translateX(-50%);
-  font-size:10px;letter-spacing:0.3em;
-  color:rgba(255,255,255,0.3);
-  white-space:nowrap;
-  text-transform:uppercase;
-}
-
-.pack-content{}
-.pack-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  border:1px solid rgba(255,23,68,0.5);
-  background:rgba(255,23,68,0.08);
-  color:#FF1744;
-  padding:7px 18px;border-radius:100px;
-  font-size:11px;letter-spacing:0.35em;text-transform:uppercase;
-  margin-bottom:28px;
-}
-.badge-dot{width:6px;height:6px;border-radius:50%;background:#FF1744;}
-
-.pack-title{
-  font-family:'Anton',sans-serif;
-  font-size:clamp(60px,9vw,120px);
-  line-height:0.86;
-  margin-bottom:28px;
-}
-.pack-title .outline{
-  -webkit-text-stroke:2px rgba(255,255,255,0.3);
-  color:transparent;display:block;
-}
-
-.pack-desc{
-  font-size:16px;color:rgba(255,255,255,0.5);
-  line-height:1.75;margin-bottom:48px;
-  max-width:400px;
-}
-
-.price-row{
-  display:flex;align-items:baseline;gap:16px;
-  margin-bottom:40px;
-}
-.price-main{
-  font-family:'Anton',sans-serif;
-  font-size:80px;color:#FF1744;line-height:1;
-}
-.price-per{
-  font-size:14px;letter-spacing:0.15em;
-  color:rgba(255,255,255,0.3);
-  text-transform:uppercase;
-}
-
-.shade-picker{
-  display:flex;gap:8px;flex-wrap:wrap;
-  margin-bottom:48px;
-}
-.shade-dot{
-  width:28px;height:28px;border-radius:50%;
-  border:2px solid transparent;
-  transition:transform 0.2s,border-color 0.2s;
-  cursor:none;
-}
-.shade-dot:hover{
-  transform:scale(1.3);
-  border-color:rgba(255,255,255,0.6);
-}
-
-.buy-now{
-  display:inline-flex;align-items:center;gap:16px;
-  background:#FF1744;color:#fff;
-  padding:22px 56px;border-radius:100px;
-  font-family:'Anton',sans-serif;font-size:20px;
-  letter-spacing:0.08em;text-decoration:none;
-  transition:transform 0.25s,box-shadow 0.25s;
-  border:none;cursor:none;
-}
-.buy-now:hover{
-  transform:scale(1.04);
-  box-shadow:0 20px 60px rgba(255,23,68,0.4);
-}
-.buy-now .arrow{
-  display:inline-block;
-  transition:transform 0.25s;
-}
+/* ── PACK ── section bg shifts to deep berry */
+#pack{padding:100px 5vw;position:relative;overflow:hidden;background:#0c0020;}
+.pack-bg-text{position:absolute;font-family:'Anton',sans-serif;font-size:clamp(100px,22vw,380px);color:rgba(255,255,255,.015);white-space:nowrap;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;user-select:none;}
+.pack-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+@media(max-width:768px){.pack-inner{grid-template-columns:1fr;gap:50px;}.pack-tubes{order:-1;}}
+.pack-tubes{display:flex;align-items:flex-end;justify-content:center;gap:20px;padding-bottom:50px;}
+.tube-wrap{display:flex;flex-direction:column;align-items:center;}
+.tube{width:clamp(60px,7vw,90px);height:clamp(150px,18vw,220px);border-radius:45px;position:relative;}
+.tube::before{content:'';position:absolute;top:12px;left:12px;right:12px;height:30%;border-radius:30px;background:rgba(255,255,255,.15);}
+.tube-label{margin-top:12px;font-size:10px;letter-spacing:.25em;color:rgba(255,255,255,.3);white-space:nowrap;text-transform:uppercase;}
+.pack-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,23,68,.5);background:rgba(255,23,68,.08);color:#FF1744;padding:7px 18px;border-radius:100px;font-size:11px;letter-spacing:.35em;text-transform:uppercase;margin-bottom:24px;}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:#FF1744;flex-shrink:0;}
+.pack-title{font-family:'Anton',sans-serif;font-size:clamp(52px,8vw,120px);line-height:.86;margin-bottom:24px;}
+.pack-title .outline{-webkit-text-stroke:2px rgba(255,255,255,.25);color:transparent;display:block;}
+.pack-desc{font-size:15px;color:rgba(255,255,255,.5);line-height:1.75;margin-bottom:40px;max-width:400px;}
+.price-row{display:flex;align-items:baseline;gap:14px;margin-bottom:32px;}
+.price-main{font-family:'Anton',sans-serif;font-size:clamp(56px,8vw,80px);color:#FF1744;line-height:1;}
+.price-per{font-size:13px;letter-spacing:.15em;color:rgba(255,255,255,.3);text-transform:uppercase;}
+.shade-picker{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px;}
+.shade-dot{width:26px;height:26px;border-radius:50%;border:2px solid transparent;transition:transform .2s,border-color .2s;}
+.shade-dot:hover{transform:scale(1.3);border-color:rgba(255,255,255,.6);}
+.buy-now{display:inline-flex;align-items:center;gap:14px;background:#FF1744;color:#fff;padding:20px 52px;border-radius:100px;font-family:'Anton',sans-serif;font-size:clamp(15px,2vw,20px);letter-spacing:.08em;text-decoration:none;transition:transform .25s,box-shadow .25s;width:fit-content;}
+.buy-now:hover{transform:scale(1.04);box-shadow:0 20px 60px rgba(255,23,68,.45);}
+.buy-now .arrow{transition:transform .25s;}
 .buy-now:hover .arrow{transform:translateX(6px);}
+@media(max-width:480px){.buy-now{width:100%;justify-content:center;}}
 
-/* PROOF BAR */
-.proof-bar{
-  max-width:1200px;margin:0 auto 120px;
-  padding:0 40px;
-  display:flex;gap:60px;align-items:center;
-  border-top:1px solid rgba(255,255,255,0.06);
-  padding-top:60px;
-}
-.proof-item{}
-.proof-num{
-  font-family:'Anton',sans-serif;
-  font-size:52px;color:#FF1744;line-height:1;
-}
-.proof-label{
-  font-size:12px;letter-spacing:0.2em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,0.3);
-  margin-top:4px;
-}
+/* ── PROOF ── */
+.proof-bar{max-width:1200px;margin:0 auto 0;padding:60px 5vw;display:flex;gap:40px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.06);background:#060606;}
+.proof-num{font-family:'Anton',sans-serif;font-size:clamp(36px,5vw,52px);color:#FF1744;line-height:1;}
+.proof-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:4px;}
 
-/* FINAL */
-#final{
-  height:100vh;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;padding:40px;
-  position:relative;overflow:hidden;
-}
-.final-title{
-  font-family:'Anton',sans-serif;
-  font-size:clamp(70px,15vw,200px);
-  line-height:0.82;
-  margin-bottom:52px;
-}
+/* ── FINAL ── section bg back to dark but with heavy color blobs */
+#final{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 5vw;position:relative;overflow:hidden;background:#060606;}
+.final-title{font-family:'Anton',sans-serif;font-size:clamp(60px,15vw,200px);line-height:.82;margin-bottom:48px;}
 .final-title .r{color:#FF1744;}
-.final-title .o{
-  -webkit-text-stroke:2px rgba(255,255,255,0.2);
-  color:transparent;display:block;
-}
-.final-title .w{display:block;}
-
-.final-sub{
-  font-size:14px;letter-spacing:0.25em;
-  color:rgba(255,255,255,0.25);
-  margin-top:24px;text-transform:uppercase;
-}
-
-footer{
-  text-align:center;padding:40px;
-  font-size:11px;letter-spacing:0.2em;
-  color:rgba(255,255,255,0.15);
-  text-transform:uppercase;
-  border-top:1px solid rgba(255,255,255,0.06);
-}
+.final-title .o{-webkit-text-stroke:2px rgba(255,255,255,.18);color:transparent;display:block;}
+.final-sub{margin-top:24px;font-size:12px;letter-spacing:.25em;color:rgba(255,255,255,.2);text-transform:uppercase;}
+footer{text-align:center;padding:32px 5vw;font-size:11px;letter-spacing:.2em;color:rgba(255,255,255,.12);text-transform:uppercase;border-top:1px solid rgba(255,255,255,.05);background:#060606;}
 </style>
 </head>
 <body>
-
 <div class="cursor" id="cur"></div>
 <div class="cursor-ring" id="ring"></div>
 
@@ -419,11 +123,84 @@ footer{
   <a href="#pack" class="nav-cta">Shop Now</a>
 </nav>
 
-<!-- HERO -->
+<!-- ══════════════ HERO ══════════════ -->
 <section id="hero">
-  <div class="blob" id="b1" style="width:500px;height:500px;background:#FF1744;top:5%;left:-5%;opacity:0.12;"></div>
-  <div class="blob" id="b2" style="width:400px;height:400px;background:#E040FB;bottom:10%;right:-5%;opacity:0.1;"></div>
-  <div class="blob" id="b3" style="width:300px;height:300px;background:#FF6D00;bottom:20%;left:20%;opacity:0.08;"></div>
+  <div class="blob" id="b1" style="width:clamp(280px,45vw,550px);height:clamp(280px,45vw,550px);background:#FF1744;top:-5%;left:-8%;opacity:.11;"></div>
+  <div class="blob" id="b2" style="width:clamp(200px,35vw,450px);height:clamp(200px,35vw,450px);background:#E040FB;bottom:5%;right:-6%;opacity:.09;"></div>
+  <div class="blob" id="b3" style="width:clamp(150px,25vw,320px);height:clamp(150px,25vw,320px);background:#FF6D00;bottom:25%;left:10%;opacity:.08;"></div>
+
+  <!-- CHERRY SVG -->
+  <svg class="fruit-svg" id="f-cherry1" style="width:clamp(70px,10vw,130px);top:8%;left:4%;transform:rotate(-15deg);" viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="30" cy="90" r="22" fill="#CC0022"/>
+    <circle cx="30" cy="90" r="22" fill="url(#cg1)" opacity=".5"/>
+    <circle cx="70" cy="80" r="22" fill="#AA0018"/>
+    <circle cx="70" cy="80" r="22" fill="url(#cg2)" opacity=".5"/>
+    <path d="M30 68 Q40 30 60 10 Q80 30 70 58" stroke="#2d7a1c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="60" cy="9" rx="8" ry="5" fill="#3a9e25" transform="rotate(-20 60 9)"/>
+    <circle cx="22" cy="83" r="5" fill="rgba(255,255,255,.25)"/>
+    <circle cx="62" cy="73" r="5" fill="rgba(255,255,255,.25)"/>
+    <defs>
+      <radialGradient id="cg1" cx="35%" cy="30%"><stop offset="0%" stop-color="#ff6680"/><stop offset="100%" stop-color="#CC0022" stop-opacity="0"/></radialGradient>
+      <radialGradient id="cg2" cx="35%" cy="30%"><stop offset="0%" stop-color="#ff4466"/><stop offset="100%" stop-color="#AA0018" stop-opacity="0"/></radialGradient>
+    </defs>
+  </svg>
+
+  <!-- STRAWBERRY SVG -->
+  <svg class="fruit-svg" id="f-straw1" style="width:clamp(55px,8vw,110px);top:15%;right:6%;transform:rotate(12deg);" viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M40 95 C15 75 5 50 10 28 Q20 8 40 12 Q60 8 70 28 C75 50 65 75 40 95Z" fill="#FF2244"/>
+    <path d="M40 95 C15 75 5 50 10 28 Q20 8 40 12 Q60 8 70 28 C75 50 65 75 40 95Z" fill="url(#sg1)" opacity=".4"/>
+    <ellipse cx="25" cy="10" rx="7" ry="10" fill="#3db526" transform="rotate(-25 25 10)"/>
+    <ellipse cx="40" cy="6" rx="6" ry="10" fill="#4dc832"/>
+    <ellipse cx="55" cy="10" rx="7" ry="10" fill="#3db526" transform="rotate(25 55 10)"/>
+    <circle cx="30" cy="45" r="3" fill="rgba(255,255,80,.7)"/>
+    <circle cx="50" cy="40" r="3" fill="rgba(255,255,80,.7)"/>
+    <circle cx="40" cy="60" r="3" fill="rgba(255,255,80,.7)"/>
+    <circle cx="25" cy="60" r="2.5" fill="rgba(255,255,80,.7)"/>
+    <circle cx="55" cy="58" r="2.5" fill="rgba(255,255,80,.7)"/>
+    <circle cx="20" cy="38" r="2" fill="rgba(255,255,80,.6)"/>
+    <circle cx="60" cy="50" r="2" fill="rgba(255,255,80,.6)"/>
+    <path d="M18 28 C22 18 30 20 28 28" stroke="rgba(255,255,255,.3)" stroke-width="2" fill="none"/>
+    <defs><radialGradient id="sg1" cx="30%" cy="25%"><stop offset="0%" stop-color="#ff88aa"/><stop offset="100%" stop-color="#FF2244" stop-opacity="0"/></radialGradient></defs>
+  </svg>
+
+  <!-- GRAPE SVG -->
+  <svg class="fruit-svg" id="f-grape1" style="width:clamp(50px,7vw,100px);bottom:20%;right:4%;transform:rotate(-8deg);" viewBox="0 0 90 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="30" cy="50" r="16" fill="#8B2FC9"/><circle cx="60" cy="50" r="16" fill="#7A22B8"/>
+    <circle cx="45" cy="35" r="16" fill="#9B38D9"/><circle cx="20" cy="70" r="16" fill="#7A22B8"/>
+    <circle cx="50" cy="72" r="16" fill="#8B2FC9"/><circle cx="72" cy="68" r="16" fill="#6B14A8"/>
+    <circle cx="37" cy="90" r="14" fill="#9B38D9"/><circle cx="62" cy="90" r="13" fill="#7A22B8"/>
+    <circle cx="49" cy="106" r="11" fill="#8B2FC9"/>
+    <circle cx="23" cy="43" r="4" fill="rgba(255,255,255,.3)"/>
+    <circle cx="53" cy="28" r="4" fill="rgba(255,255,255,.3)"/>
+    <circle cx="38" cy="65" r="3" fill="rgba(255,255,255,.25)"/>
+    <path d="M45 18 Q48 8 55 5" stroke="#4a8c1c" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="57" cy="4" rx="7" ry="4" fill="#5aac22" transform="rotate(20 57 4)"/>
+  </svg>
+
+  <!-- PEACH SVG -->
+  <svg class="fruit-svg" id="f-peach1" style="width:clamp(55px,8vw,105px);bottom:12%;left:6%;transform:rotate(18deg);" viewBox="0 0 90 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="45" cy="55" r="38" fill="#FF9955"/>
+    <circle cx="45" cy="55" r="38" fill="url(#pg1)" opacity=".5"/>
+    <path d="M45 18 C45 18 42 8 45 3 C48 8 45 18 45 18Z" fill="#3db526"/>
+    <path d="M20 38 Q45 17 70 38" stroke="#FF7733" stroke-width="2" fill="none" opacity=".4"/>
+    <path d="M45 17 Q45 55 45 93" stroke="#FF7733" stroke-width="1.5" fill="none" opacity=".3"/>
+    <circle cx="33" cy="43" r="7" fill="rgba(255,255,255,.2)"/>
+    <defs><radialGradient id="pg1" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffcc88"/><stop offset="100%" stop-color="#FF9955" stop-opacity="0"/></radialGradient></defs>
+  </svg>
+
+  <!-- RASPBERRY SVG -->
+  <svg class="fruit-svg" id="f-rasp1" style="width:clamp(45px,6vw,85px);top:50%;left:2%;transform:rotate(-5deg);" viewBox="0 0 70 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="22" cy="35" r="13" fill="#E8004D"/>
+    <circle cx="48" cy="35" r="13" fill="#D8003D"/>
+    <circle cx="35" cy="22" r="13" fill="#F0105A"/>
+    <circle cx="22" cy="50" r="13" fill="#D8003D"/>
+    <circle cx="48" cy="50" r="13" fill="#E8004D"/>
+    <circle cx="35" cy="62" r="11" fill="#E0004A"/>
+    <circle cx="16" cy="28" r="3.5" fill="rgba(255,255,255,.3)"/>
+    <circle cx="42" cy="16" r="3.5" fill="rgba(255,255,255,.3)"/>
+    <path d="M35 10 Q38 2 42 0" stroke="#4a8c1c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="44" cy="-1" rx="6" ry="3.5" fill="#5aac22" transform="rotate(15 44 -1)"/>
+  </svg>
 
   <p class="hero-eyebrow" id="ey">The Lip Oil Collection</p>
   <h1 class="hero-title">
@@ -434,14 +211,10 @@ footer{
   <a href="https://lunaglow-5678.myshopify.com/products/bestie-duo" class="hero-pill" id="hp">
     Get the Bestie Duo &nbsp;<span>$24.99</span>
   </a>
-
-  <div class="scroll-hint">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
 </section>
 
-<!-- MARQUEE -->
+<!-- ══════════════ MARQUEE ══════════════ -->
 <div class="marquee-wrap">
   <div class="marquee-track">
     <span class="m-word">CHERRY</span><span class="m-dot">✦</span>
@@ -452,7 +225,6 @@ footer{
     <span class="m-word">MAHOGANY</span><span class="m-dot">✦</span>
     <span class="m-word">RASPBERRY</span><span class="m-dot">✦</span>
     <span class="m-word hot">LUNAGLOW</span><span class="m-dot">✦</span>
-    <span class="m-word">ROSEWOOD</span><span class="m-dot">✦</span>
     <span class="m-word">MOONLIGHT</span><span class="m-dot">✦</span>
     <span class="m-word hot">PICK YOUR DUO</span><span class="m-dot">✦</span>
     <span class="m-word">CHERRY</span><span class="m-dot">✦</span>
@@ -463,96 +235,209 @@ footer{
     <span class="m-word">MAHOGANY</span><span class="m-dot">✦</span>
     <span class="m-word">RASPBERRY</span><span class="m-dot">✦</span>
     <span class="m-word hot">LUNAGLOW</span><span class="m-dot">✦</span>
-    <span class="m-word">ROSEWOOD</span><span class="m-dot">✦</span>
     <span class="m-word">MOONLIGHT</span><span class="m-dot">✦</span>
     <span class="m-word hot">PICK YOUR DUO</span><span class="m-dot">✦</span>
   </div>
 </div>
 
-<!-- SHADES -->
+<!-- ══════════════ SHADES — fondo morado oscuro ══════════════ -->
 <section id="shades">
-  <h2 class="section-head" id="sh">
-    10 SHADES.<br><span class="dim">ZERO EXCUSES.</span>
-  </h2>
-  <div class="shades-grid" id="sg"></div>
+  <!-- GRAPE in corner -->
+  <svg class="fruit-svg" id="fs1" style="width:clamp(80px,12vw,160px);top:4%;right:2%;transform:rotate(12deg);" viewBox="0 0 90 110" fill="none">
+    <circle cx="30" cy="50" r="16" fill="#9B38D9"/><circle cx="60" cy="50" r="16" fill="#8B2FC9"/>
+    <circle cx="45" cy="35" r="16" fill="#AA44E8"/><circle cx="20" cy="70" r="16" fill="#8B2FC9"/>
+    <circle cx="50" cy="72" r="16" fill="#9B38D9"/><circle cx="72" cy="68" r="16" fill="#7A22B8"/>
+    <circle cx="37" cy="90" r="14" fill="#AA44E8"/><circle cx="62" cy="90" r="13" fill="#8B2FC9"/>
+    <circle cx="49" cy="106" r="11" fill="#9B38D9"/>
+    <circle cx="23" cy="43" r="4" fill="rgba(255,255,255,.3)"/>
+    <circle cx="53" cy="28" r="4" fill="rgba(255,255,255,.3)"/>
+    <path d="M45 18 Q48 8 55 5" stroke="#4a8c1c" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="57" cy="4" rx="7" ry="4" fill="#5aac22" transform="rotate(20 57 4)"/>
+  </svg>
+  <!-- BLUEBERRY blob -->
+  <div class="blob" style="position:absolute;width:350px;height:350px;background:#6600cc;top:20%;left:-5%;opacity:.12;filter:blur(80px);border-radius:50%;mix-blend-mode:screen;"></div>
+  <div class="blob" style="position:absolute;width:280px;height:280px;background:#E040FB;bottom:10%;right:-3%;opacity:.1;filter:blur(70px);border-radius:50%;mix-blend-mode:screen;"></div>
+
+  <div style="max-width:1200px;margin:0 auto;position:relative;z-index:2;">
+    <h2 class="section-head" id="sh">10 SHADES.<br><span class="dim">ZERO EXCUSES.</span></h2>
+    <div class="shades-grid" id="sg"></div>
+  </div>
 </section>
 
-<!-- PACK -->
-<section id="pack">
-  <div class="pack-bg-text">BESTIE DUO</div>
-  <div class="pack-inner">
-    <div class="pack-tubes" id="pt">
-      <div style="display:flex;flex-direction:column;align-items:center;">
-        <div class="tube" id="tube1" style="background:linear-gradient(160deg,#FF1744,#9b0011);box-shadow:0 30px 80px rgba(255,23,68,0.35);"></div>
-        <div class="tube-label">Cherry Nova</div>
+<!-- ══════════════ PHOTOS — fondo cherry oscuro ══════════════ -->
+<section id="product-photos">
+  <!-- STRAWBERRY big -->
+  <svg class="fruit-svg" id="fs2" style="width:clamp(90px,14vw,180px);top:5%;right:3%;transform:rotate(-10deg);" viewBox="0 0 80 100" fill="none">
+    <path d="M40 95 C15 75 5 50 10 28 Q20 8 40 12 Q60 8 70 28 C75 50 65 75 40 95Z" fill="#FF2244"/>
+    <path d="M40 95 C15 75 5 50 10 28 Q20 8 40 12 Q60 8 70 28 C75 50 65 75 40 95Z" fill="url(#sg2)" opacity=".4"/>
+    <ellipse cx="25" cy="10" rx="7" ry="10" fill="#3db526" transform="rotate(-25 25 10)"/>
+    <ellipse cx="40" cy="6" rx="6" ry="10" fill="#4dc832"/>
+    <ellipse cx="55" cy="10" rx="7" ry="10" fill="#3db526" transform="rotate(25 55 10)"/>
+    <circle cx="30" cy="45" r="3" fill="rgba(255,255,80,.7)"/>
+    <circle cx="50" cy="40" r="3" fill="rgba(255,255,80,.7)"/>
+    <circle cx="40" cy="60" r="3" fill="rgba(255,255,80,.7)"/>
+    <circle cx="25" cy="62" r="2.5" fill="rgba(255,255,80,.7)"/>
+    <circle cx="55" cy="58" r="2.5" fill="rgba(255,255,80,.7)"/>
+    <defs><radialGradient id="sg2" cx="30%" cy="25%"><stop offset="0%" stop-color="#ff88aa"/><stop offset="100%" stop-color="#FF2244" stop-opacity="0"/></radialGradient></defs>
+  </svg>
+  <!-- CHERRY small bottom -->
+  <svg class="fruit-svg" id="fs3" style="width:clamp(60px,9vw,120px);bottom:6%;left:3%;transform:rotate(20deg);" viewBox="0 0 100 120" fill="none">
+    <circle cx="30" cy="90" r="22" fill="#CC0022"/><circle cx="70" cy="80" r="22" fill="#AA0018"/>
+    <path d="M30 68 Q40 30 60 10 Q80 30 70 58" stroke="#2d7a1c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="60" cy="9" rx="8" ry="5" fill="#3a9e25" transform="rotate(-20 60 9)"/>
+    <circle cx="22" cy="83" r="5" fill="rgba(255,255,255,.25)"/>
+    <circle cx="62" cy="73" r="5" fill="rgba(255,255,255,.25)"/>
+  </svg>
+  <div class="blob" style="position:absolute;width:400px;height:400px;background:#FF1744;top:10%;left:-8%;opacity:.1;filter:blur(90px);border-radius:50%;mix-blend-mode:screen;"></div>
+  <div class="blob" style="position:absolute;width:300px;height:300px;background:#FF6D00;bottom:15%;right:-5%;opacity:.09;filter:blur(80px);border-radius:50%;mix-blend-mode:screen;"></div>
+
+  <div style="max-width:1200px;margin:0 auto;position:relative;z-index:2;">
+    <h2 class="photos-head" id="ph">THE <span style="color:#FF1744;">LOOK.</span></h2>
+    <p class="photos-sub">— Tap to shop</p>
+    <div class="photos-grid" id="pgrid">
+      <!-- ═══════════════════════════════════════════════
+           ZONA DE FOTOS — cuando tengas imágenes de IA:
+           1. Quita class="empty" del photo-slot
+           2. Añade <img src="TU_URL" alt="LunaGlow">
+           ═══════════════════════════════════════════════ -->
+      <div class="photo-slot featured empty" id="foto-hero">
+        <svg class="ph-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,23,68,0.5)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span class="ph-label">Foto principal</span>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:center;">
-        <div class="tube" id="tube2" style="background:linear-gradient(160deg,#E040FB,#8400a3);transform:rotate(6deg) translateY(-30px);box-shadow:0 30px 80px rgba(224,64,251,0.3);"></div>
-        <div class="tube-label" style="transform:rotate(6deg);">Berry Eclipse</div>
+      <div class="photo-slot empty" id="foto-1">
+        <svg class="ph-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,23,68,0.4)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span class="ph-label">Cherry Nova</span>
+      </div>
+      <div class="photo-slot empty" id="foto-2">
+        <svg class="ph-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,23,68,0.4)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span class="ph-label">Berry Eclipse</span>
+      </div>
+      <div class="photo-slot empty" id="foto-3">
+        <svg class="ph-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,23,68,0.4)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span class="ph-label">Pink Cloud</span>
+      </div>
+      <div class="photo-slot empty" id="foto-4">
+        <svg class="ph-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,23,68,0.4)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span class="ph-label">All 10 Shades</span>
       </div>
     </div>
+  </div>
+</section>
 
+<!-- ══════════════ PACK — fondo berry oscuro ══════════════ -->
+<section id="pack">
+  <div class="pack-bg-text">BESTIE DUO</div>
+  <!-- PEACH big -->
+  <svg class="fruit-svg" id="fs4" style="width:clamp(80px,12vw,150px);top:8%;right:3%;transform:rotate(10deg);" viewBox="0 0 90 100" fill="none">
+    <circle cx="45" cy="55" r="38" fill="#FF9955"/>
+    <circle cx="45" cy="55" r="38" fill="url(#pg2)" opacity=".5"/>
+    <path d="M45 18 C45 18 42 8 45 3 C48 8 45 18 45 18Z" fill="#3db526"/>
+    <path d="M45 17 Q45 55 45 93" stroke="#FF7733" stroke-width="1.5" fill="none" opacity=".3"/>
+    <circle cx="33" cy="43" r="7" fill="rgba(255,255,255,.2)"/>
+    <defs><radialGradient id="pg2" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffcc88"/><stop offset="100%" stop-color="#FF9955" stop-opacity="0"/></radialGradient></defs>
+  </svg>
+  <!-- RASPBERRY left -->
+  <svg class="fruit-svg" id="fs5" style="width:clamp(60px,9vw,120px);bottom:10%;left:3%;transform:rotate(-12deg);" viewBox="0 0 70 80" fill="none">
+    <circle cx="22" cy="35" r="13" fill="#E8004D"/><circle cx="48" cy="35" r="13" fill="#D8003D"/>
+    <circle cx="35" cy="22" r="13" fill="#F0105A"/><circle cx="22" cy="50" r="13" fill="#D8003D"/>
+    <circle cx="48" cy="50" r="13" fill="#E8004D"/><circle cx="35" cy="62" r="11" fill="#E0004A"/>
+    <circle cx="16" cy="28" r="3.5" fill="rgba(255,255,255,.3)"/>
+    <circle cx="42" cy="16" r="3.5" fill="rgba(255,255,255,.3)"/>
+    <path d="M35 10 Q38 2 42 0" stroke="#4a8c1c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="44" cy="-1" rx="6" ry="3.5" fill="#5aac22" transform="rotate(15 44 -1)"/>
+  </svg>
+  <div class="blob" style="position:absolute;width:350px;height:350px;background:#E040FB;top:15%;left:-5%;opacity:.1;filter:blur(80px);border-radius:50%;mix-blend-mode:screen;"></div>
+  <div class="blob" style="position:absolute;width:300px;height:300px;background:#FF1744;bottom:10%;right:-5%;opacity:.1;filter:blur(80px);border-radius:50%;mix-blend-mode:screen;"></div>
+
+  <div class="pack-inner" style="position:relative;z-index:2;">
+    <div class="pack-tubes" id="pt">
+      <div class="tube-wrap">
+        <div class="tube" id="tube1" style="background:linear-gradient(160deg,#FF1744,#9b0011);box-shadow:0 30px 80px rgba(255,23,68,.4);"></div>
+        <div class="tube-label">Cherry Nova</div>
+      </div>
+      <div class="tube-wrap" style="margin-bottom:28px;">
+        <div class="tube" id="tube2" style="background:linear-gradient(160deg,#E040FB,#7b00a3);transform:rotate(5deg);box-shadow:0 30px 80px rgba(224,64,251,.35);"></div>
+        <div class="tube-label">Berry Eclipse</div>
+      </div>
+    </div>
     <div class="pack-content">
       <div class="pack-badge" id="pb"><div class="badge-dot"></div>Most Popular</div>
-      <h2 class="pack-title" id="pti">
-        BESTIE<br>
-        <span class="outline">DUO</span>
-      </h2>
-      <p class="pack-desc" id="pd">Two lip oils. Two vibes. One unstoppable combo. Pick any two shades and glow together — because everything's better with your bestie.</p>
+      <h2 class="pack-title" id="pti">BESTIE<br><span class="outline">DUO</span></h2>
+      <p class="pack-desc" id="pd">Two lip oils. Two vibes. One unstoppable combo. Pick any 2 shades and glow together.</p>
       <div class="price-row" id="pr">
         <span class="price-main">$24.99</span>
         <span class="price-per">Free shipping over $35</span>
       </div>
       <div class="shade-picker" id="sp"></div>
-      <a href="https://lunaglow-5678.myshopify.com/products/bestie-duo" class="buy-now" id="bn">
-        Shop Bestie Duo <span class="arrow">→</span>
-      </a>
+      <a href="https://lunaglow-5678.myshopify.com/products/bestie-duo" class="buy-now" id="bn">Shop Bestie Duo <span class="arrow">→</span></a>
     </div>
   </div>
 </section>
 
 <!-- PROOF -->
-<div class="proof-bar" id="proofbar">
-  <div class="proof-item">
-    <div class="proof-num" id="pn1">10</div>
-    <div class="proof-label">Shades Available</div>
-  </div>
-  <div class="proof-item">
-    <div class="proof-num" id="pn2">455</div>
-    <div class="proof-label">Units in Stock</div>
-  </div>
-  <div class="proof-item">
-    <div class="proof-num" id="pn3">USA</div>
-    <div class="proof-label">Ships To</div>
-  </div>
-  <div class="proof-item" style="margin-left:auto;">
-    <div style="font-size:13px;color:rgba(255,255,255,0.4);line-height:1.8;max-width:260px;">
-      "The gloss that keeps on giving — obsessed with Berry Eclipse + Cherry Nova together."
-    </div>
-  </div>
+<div class="proof-bar">
+  <div class="proof-item"><div class="proof-num">10</div><div class="proof-label">Shades Available</div></div>
+  <div class="proof-item"><div class="proof-num">455</div><div class="proof-label">Units in Stock</div></div>
+  <div class="proof-item"><div class="proof-num">USA</div><div class="proof-label">Ships To</div></div>
+  <div class="proof-item" style="margin-left:auto;max-width:270px;"><div style="font-size:13px;color:rgba(255,255,255,.35);line-height:1.8;">"Obsessed with Berry Eclipse + Cherry Nova — the perfect duo."</div></div>
 </div>
 
-<!-- FINAL -->
+<!-- ══════════════ FINAL ══════════════ -->
 <section id="final">
-  <div class="blob" style="width:600px;height:600px;background:#FF1744;top:20%;left:-10%;opacity:0.08;filter:blur(100px);"></div>
-  <div class="blob" style="width:500px;height:500px;background:#E040FB;bottom:10%;right:-10%;opacity:0.07;filter:blur(100px);"></div>
+  <div class="blob" style="width:clamp(280px,45vw,550px);height:clamp(280px,45vw,550px);background:#FF1744;top:10%;left:-8%;opacity:.09;filter:blur(100px);border-radius:50%;mix-blend-mode:screen;"></div>
+  <div class="blob" style="width:clamp(200px,35vw,450px);height:clamp(200px,35vw,450px);background:#E040FB;bottom:8%;right:-6%;opacity:.08;filter:blur(100px);border-radius:50%;mix-blend-mode:screen;"></div>
+  <div class="blob" style="width:clamp(150px,25vw,300px);height:clamp(150px,25vw,300px);background:#FF9955;bottom:25%;left:15%;opacity:.07;filter:blur(80px);border-radius:50%;mix-blend-mode:screen;"></div>
+  <!-- CHERRY final -->
+  <svg class="fruit-svg" id="ff1" style="width:clamp(70px,11vw,140px);top:8%;left:4%;transform:rotate(-12deg);" viewBox="0 0 100 120" fill="none">
+    <circle cx="30" cy="90" r="22" fill="#CC0022"/><circle cx="70" cy="80" r="22" fill="#AA0018"/>
+    <path d="M30 68 Q40 30 60 10 Q80 30 70 58" stroke="#2d7a1c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="60" cy="9" rx="8" ry="5" fill="#3a9e25" transform="rotate(-20 60 9)"/>
+    <circle cx="22" cy="83" r="5" fill="rgba(255,255,255,.25)"/>
+    <circle cx="62" cy="73" r="5" fill="rgba(255,255,255,.25)"/>
+  </svg>
+  <!-- STRAWBERRY final -->
+  <svg class="fruit-svg" id="ff2" style="width:clamp(65px,10vw,130px);bottom:12%;right:5%;transform:rotate(15deg);" viewBox="0 0 80 100" fill="none">
+    <path d="M40 95 C15 75 5 50 10 28 Q20 8 40 12 Q60 8 70 28 C75 50 65 75 40 95Z" fill="#FF2244"/>
+    <ellipse cx="25" cy="10" rx="7" ry="10" fill="#3db526" transform="rotate(-25 25 10)"/>
+    <ellipse cx="40" cy="6" rx="6" ry="10" fill="#4dc832"/>
+    <ellipse cx="55" cy="10" rx="7" ry="10" fill="#3db526" transform="rotate(25 55 10)"/>
+    <circle cx="30" cy="45" r="3" fill="rgba(255,255,80,.7)"/>
+    <circle cx="50" cy="40" r="3" fill="rgba(255,255,80,.7)"/>
+    <circle cx="40" cy="60" r="3" fill="rgba(255,255,80,.7)"/>
+  </svg>
+  <!-- PEACH final -->
+  <svg class="fruit-svg" id="ff3" style="width:clamp(55px,8vw,110px);top:15%;right:8%;transform:rotate(-8deg);" viewBox="0 0 90 100" fill="none">
+    <circle cx="45" cy="55" r="38" fill="#FF9955"/>
+    <path d="M45 18 C45 18 42 8 45 3 C48 8 45 18 45 18Z" fill="#3db526"/>
+    <circle cx="33" cy="43" r="7" fill="rgba(255,255,255,.2)"/>
+  </svg>
+  <!-- GRAPE final -->
+  <svg class="fruit-svg" id="ff4" style="width:clamp(55px,8vw,110px);bottom:20%;left:8%;transform:rotate(18deg);" viewBox="0 0 90 110" fill="none">
+    <circle cx="30" cy="50" r="16" fill="#8B2FC9"/><circle cx="60" cy="50" r="16" fill="#7A22B8"/>
+    <circle cx="45" cy="35" r="16" fill="#9B38D9"/><circle cx="37" cy="70" r="14" fill="#8B2FC9"/>
+    <circle cx="60" cy="68" r="13" fill="#7A22B8"/><circle cx="48" cy="86" r="11" fill="#9B38D9"/>
+    <circle cx="23" cy="43" r="4" fill="rgba(255,255,255,.3)"/>
+    <path d="M45 18 Q48 8 55 5" stroke="#4a8c1c" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="57" cy="4" rx="7" ry="4" fill="#5aac22" transform="rotate(20 57 4)"/>
+  </svg>
+
   <h2 class="final-title" id="ft">
     <span class="r">GET</span>
     <span class="o">YOUR</span>
-    <span class="w">DUO</span>
+    <span>DUO</span>
   </h2>
-  <a href="https://lunaglow-5678.myshopify.com/products/bestie-duo" class="buy-now" style="font-size:22px;padding:26px 70px;" id="fbn">
+  <a href="https://lunaglow-5678.myshopify.com/products/bestie-duo" class="buy-now" style="font-size:clamp(15px,2.5vw,22px);padding:22px 60px;" id="fbn">
     Shop Now — $24.99 <span class="arrow">→</span>
   </a>
-  <p class="final-sub">Free shipping · Ships from USA · 10 shades available</p>
+  <p class="final-sub">Free shipping · Ships from USA · 10 shades</p>
 </section>
 
-<footer>© 2026 LunaGlow · All Rights Reserved · Made with 💋</footer>
+<footer>© 2026 LunaGlow · lunaglowcosmetics.com · All Rights Reserved</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <script>
-const shades = [
+const shades=[
   {num:'000',name:'Moonlight',   color:'#F0EEE8',bg:'#111118',glow:'#9090a0'},
   {num:'001',name:'Pink Cloud',  color:'#FF80AB',bg:'#1a0410',glow:'#FF80AB'},
   {num:'004',name:'Sunset Coral',color:'#FF6E40',bg:'#1a0800',glow:'#FF6E40'},
@@ -564,141 +449,86 @@ const shades = [
   {num:'017',name:'Blue Moon',   color:'#40C4FF',bg:'#001520',glow:'#40C4FF'},
   {num:'020',name:'Mahogany Mid.',color:'#C2885A',bg:'#120600',glow:'#C2885A'},
 ];
-
-// Build shade grid
-const sg = document.getElementById('sg');
+const sg=document.getElementById('sg');
 shades.forEach(s=>{
-  const d = document.createElement('div');
-  d.className = 'shade-card';
-  d.style.background = s.bg;
-  d.style.borderColor = s.color+'22';
-  d.innerHTML = `
-    <div class="shade-glow-ring" style="background:${s.glow};"></div>
-    <div class="shade-glow" style="background:radial-gradient(circle at 40% 35%, ${s.color}dd, ${s.color}88);box-shadow:0 0 50px ${s.glow}66;"></div>
-    <div class="shade-name">${s.name}</div>
-    <div class="shade-code">${s.num}</div>
-  `;
+  const d=document.createElement('div');
+  d.className='shade-card';d.style.background=s.bg;d.style.borderColor=s.color+'22';
+  d.innerHTML=`<div class="shade-glow-ring" style="background:${s.glow};"></div><div class="shade-glow" style="background:radial-gradient(circle at 40% 35%,${s.color}dd,${s.color}88);box-shadow:0 0 40px ${s.glow}55;"></div><div class="shade-name">${s.name}</div><div class="shade-code">${s.num}</div>`;
   sg.appendChild(d);
-  d.addEventListener('mouseenter',()=>{
-    ring.classList.add('hover');
-    d.style.borderColor = s.color+'66';
-  });
-  d.addEventListener('mouseleave',()=>{
-    ring.classList.remove('hover');
-    d.style.borderColor = s.color+'22';
-  });
 });
+const sp=document.getElementById('sp');
+shades.forEach(s=>{const dot=document.createElement('div');dot.className='shade-dot';dot.style.background=s.color;dot.title=s.name;sp.appendChild(dot);});
 
-// Build shade picker
-const sp = document.getElementById('sp');
-shades.forEach(s=>{
-  const dot = document.createElement('div');
-  dot.className = 'shade-dot';
-  dot.style.background = s.color;
-  dot.title = s.name;
-  sp.appendChild(dot);
-});
-
-// Custom cursor
-const cur = document.getElementById('cur');
-const ring = document.getElementById('ring');
+// Cursor
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
 let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{
-  mx=e.clientX; my=e.clientY;
-  cur.style.left=mx-5+'px';
-  cur.style.top=my-5+'px';
-});
-(function loop(){
-  rx+=(mx-rx-18)*0.1;
-  ry+=(my-ry-18)*0.1;
-  ring.style.left=rx+'px';
-  ring.style.top=ry+'px';
-  requestAnimationFrame(loop);
-})();
+if(window.matchMedia('(pointer:fine)').matches){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx-5+'px';cur.style.top=my-5+'px';});
+  (function loop(){rx+=(mx-rx-18)*0.1;ry+=(my-ry-18)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,.shade-card,.buy-now').forEach(el=>{
+    el.addEventListener('mouseenter',()=>ring.classList.add('hov'));
+    el.addEventListener('mouseleave',()=>ring.classList.remove('hov'));
+  });
+}
 
-document.querySelectorAll('a,.shade-card,.shade-dot,.buy-now').forEach(el=>{
-  el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
-  el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
-});
-
-// GSAP
 gsap.registerPlugin(ScrollTrigger);
 
 // Hero entrance
-const htl = gsap.timeline({defaults:{ease:'power4.out'}});
-htl.from('#ey',   {y:30,opacity:0,duration:0.7,delay:0.2})
-   .from('#t1',   {y:100,opacity:0,duration:0.9},'-=0.3')
-   .from('#t2',   {y:100,opacity:0,duration:0.9},'-=0.6')
-   .from('#hs',   {y:30,opacity:0,duration:0.7},'-=0.4')
-   .from('#hp',   {y:20,opacity:0,duration:0.6},'-=0.3')
-   .from('#b1,#b2,#b3',{scale:0,opacity:0,stagger:0.15,duration:1.5,ease:'power2.out'},'-=1');
+const htl=gsap.timeline({defaults:{ease:'power4.out'}});
+htl.from('#ey',{y:30,opacity:0,duration:0.7,delay:0.2})
+   .from('#t1',{y:100,opacity:0,duration:0.9},'-=0.3')
+   .from('#t2',{y:100,opacity:0,duration:0.9},'-=0.6')
+   .from('#hs',{y:30,opacity:0,duration:0.7},'-=0.4')
+   .from('#hp',{y:20,opacity:0,duration:0.6},'-=0.3')
+   .from('#b1,#b2,#b3',{scale:0,opacity:0,stagger:.15,duration:1.5,ease:'power2.out'},'-=1')
+   .from('#f-cherry1,#f-straw1,#f-grape1,#f-peach1,#f-rasp1',{scale:0,stagger:.08,rotation:-20,duration:0.9,ease:'back.out(2)'},'-=1.2');
 
-// Blobs parallax
-gsap.to('#b1',{y:-120,scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1.5}});
-gsap.to('#b2',{y:-80,scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:2}});
+// Parallax blobs hero
+gsap.to('#b1',{y:-100,scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1.5}});
+gsap.to('#b2',{y:-70,scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:2}});
+
+// Fruit parallax all sections
+['#f-cherry1','#f-straw1','#f-grape1','#f-peach1','#f-rasp1'].forEach((id,i)=>{
+  gsap.to(id,{y:-(40+i*15),rotation:i%2===0?10:-10,scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1+i*0.2}});
+});
+
+// Section fruits — always visible, just parallax
+// No entrance animation needed, fruits are always shown
 
 // Shades
-gsap.from('#sh',{
-  scrollTrigger:{trigger:'#shades',start:'top 75%'},
-  y:80,opacity:0,duration:1,ease:'power3.out'
-});
-gsap.from('.shade-card',{
-  scrollTrigger:{trigger:'#sg',start:'top 80%'},
-  y:80,opacity:0,scale:0.75,
-  stagger:{amount:0.7,from:'start'},
-  duration:0.65,ease:'back.out(1.4)'
-});
+gsap.from('#sh',{scrollTrigger:{trigger:'#shades',start:'top 75%'},y:80,opacity:0,duration:1,ease:'power3.out'});
+gsap.from('.shade-card',{scrollTrigger:{trigger:'#sg',start:'top 80%'},y:70,opacity:0,scale:0.75,stagger:{amount:0.7,from:'start'},duration:0.6,ease:'back.out(1.4)'});
+
+// Fruits in shades float
+gsap.to('#fs1',{y:-30,rotation:20,scrollTrigger:{trigger:'#shades',start:'top bottom',end:'bottom top',scrub:1.5}});
+
+// Photos
+gsap.from('#ph',{scrollTrigger:{trigger:'#product-photos',start:'top 75%'},y:60,opacity:0,duration:0.9,ease:'power3.out'});
+gsap.from('.photo-slot',{scrollTrigger:{trigger:'#pgrid',start:'top 80%'},y:50,opacity:0,scale:.95,stagger:.1,duration:0.6,ease:'power3.out'});
+gsap.to('#fs2',{y:-40,scrollTrigger:{trigger:'#product-photos',start:'top bottom',end:'bottom top',scrub:1.8}});
+gsap.to('#fs3',{y:-25,rotation:-25,scrollTrigger:{trigger:'#product-photos',start:'top bottom',end:'bottom top',scrub:1.2}});
 
 // Pack
-gsap.from('#tube1',{
-  scrollTrigger:{trigger:'#pack',start:'top 65%'},
-  x:-120,opacity:0,rotation:-25,
-  duration:1.1,ease:'elastic.out(1,0.65)'
-});
-gsap.from('#tube2',{
-  scrollTrigger:{trigger:'#pack',start:'top 65%'},
-  x:120,opacity:0,rotation:25,
-  duration:1.1,ease:'elastic.out(1,0.65)',delay:0.12
-});
-gsap.from('#pb,#pti,#pd',{
-  scrollTrigger:{trigger:'#pack',start:'top 55%'},
-  y:50,opacity:0,stagger:0.15,
-  duration:0.8,ease:'power3.out',delay:0.2
-});
-gsap.from('#pr',{
-  scrollTrigger:{trigger:'#pack',start:'top 50%'},
-  scale:0.5,opacity:0,duration:0.7,ease:'back.out(2)',delay:0.5
-});
-gsap.from('#sp,#bn',{
-  scrollTrigger:{trigger:'#pack',start:'top 45%'},
-  y:30,opacity:0,stagger:0.1,duration:0.6,delay:0.7
-});
+gsap.from('#tube1',{scrollTrigger:{trigger:'#pack',start:'top 65%'},x:-120,opacity:0,rotation:-25,duration:1.1,ease:'elastic.out(1,.65)'});
+gsap.from('#tube2',{scrollTrigger:{trigger:'#pack',start:'top 65%'},x:120,opacity:0,rotation:25,duration:1.1,ease:'elastic.out(1,.65)',delay:.12});
+gsap.from('#pb,#pti,#pd',{scrollTrigger:{trigger:'#pack',start:'top 55%'},y:50,opacity:0,stagger:.15,duration:.8,ease:'power3.out',delay:.2});
+gsap.from('#pr',{scrollTrigger:{trigger:'#pack',start:'top 50%'},scale:.5,opacity:0,duration:.7,ease:'back.out(2)',delay:.5});
+gsap.from('#sp,#bn',{scrollTrigger:{trigger:'#pack',start:'top 45%'},y:30,opacity:0,stagger:.1,duration:.6,delay:.7});
+gsap.to('#fs4',{y:-35,scrollTrigger:{trigger:'#pack',start:'top bottom',end:'bottom top',scrub:1.6}});
+gsap.to('#fs5',{y:-20,rotation:-20,scrollTrigger:{trigger:'#pack',start:'top bottom',end:'bottom top',scrub:1}});
 
-// Proof bar
-gsap.from('.proof-item',{
-  scrollTrigger:{trigger:'#proofbar',start:'top 80%'},
-  y:40,opacity:0,stagger:0.12,duration:0.7,ease:'power3.out'
-});
+// Proof
+gsap.from('.proof-item',{scrollTrigger:{trigger:'.proof-bar',start:'top 80%'},y:40,opacity:0,stagger:.12,duration:.7,ease:'power3.out'});
 
 // Final
-gsap.from('#ft',{
-  scrollTrigger:{trigger:'#final',start:'top 65%'},
-  y:120,opacity:0,duration:1.1,ease:'power4.out'
-});
-gsap.from('#fbn',{
-  scrollTrigger:{trigger:'#final',start:'top 55%'},
-  y:30,opacity:0,duration:0.7,delay:0.4
-});
+gsap.from('#ft',{scrollTrigger:{trigger:'#final',start:'top 65%'},y:120,opacity:0,duration:1.1,ease:'power4.out'});
+gsap.from('#fbn',{scrollTrigger:{trigger:'#final',start:'top 55%'},y:30,opacity:0,duration:.7,delay:.4});
+gsap.to('#ff1,#ff2,#ff3,#ff4',{y:-40,stagger:.1,scrollTrigger:{trigger:'#final',start:'top bottom',end:'bottom top',scrub:1.5}});
 
-// Floating tubes loop
+// Loops
 gsap.to('#tube1',{y:-18,duration:2.2,ease:'sine.inOut',yoyo:true,repeat:-1});
-gsap.to('#tube2',{y:14,duration:2.8,ease:'sine.inOut',yoyo:true,repeat:-1,delay:0.7});
-
-// Buy button pulse
-gsap.to('.buy-now',{
-  boxShadow:'0 0 50px rgba(255,23,68,0.45)',
-  duration:1.8,ease:'sine.inOut',yoyo:true,repeat:-1
-});
+gsap.to('#tube2',{y:14,duration:2.8,ease:'sine.inOut',yoyo:true,repeat:-1,delay:.7});
+gsap.to('.buy-now',{boxShadow:'0 0 50px rgba(255,23,68,.4)',duration:1.8,ease:'sine.inOut',yoyo:true,repeat:-1});
 </script>
 </body>
 </html>
