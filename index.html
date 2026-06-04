@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LunaGlow — Lip Oil That Hits Different</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:#060606;
+  color:#fff;
+  font-family:'Syne',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* CURSOR */
+.cursor{
+  position:fixed;width:10px;height:10px;
+  background:#FF1744;border-radius:50%;
+  pointer-events:none;z-index:99999;
+  mix-blend-mode:difference;
+  transition:transform 0.1s;
+}
+.cursor-ring{
+  position:fixed;width:36px;height:36px;
+  border:1.5px solid rgba(255,255,255,0.4);
+  border-radius:50%;pointer-events:none;z-index:99998;
+}
+.cursor-ring.hover{width:60px;height:60px;border-color:#FF1744;}
+
+/* NOISE OVERLAY */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.5;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  padding:24px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+  z-index:1000;
+  mix-blend-mode:difference;
+}
+.nav-logo{
+  font-family:'Anton',sans-serif;
+  font-size:22px;letter-spacing:0.15em;
+  color:#fff;
+}
+.nav-cta{
+  font-size:12px;letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.6);
+  text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,0.3);
+  padding-bottom:2px;
+  transition:color 0.2s;
+}
+
+/* HERO */
+#hero{
+  height:100vh;min-height:700px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+
+.blob{
+  position:absolute;border-radius:50%;
+  filter:blur(80px);pointer-events:none;
+  mix-blend-mode:screen;
+}
+
+.hero-eyebrow{
+  font-size:11px;letter-spacing:0.5em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.35);
+  margin-bottom:20px;position:relative;z-index:2;
+}
+
+.hero-title{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(90px,20vw,260px);
+  line-height:0.82;text-align:center;
+  position:relative;z-index:2;
+  letter-spacing:-0.01em;
+}
+.hero-title .t1{
+  display:block;color:#FF1744;
+}
+.hero-title .t2{
+  display:block;
+  -webkit-text-stroke:2px rgba(255,255,255,0.25);
+  color:transparent;
+}
+
+.hero-sub{
+  font-size:clamp(13px,1.5vw,16px);
+  letter-spacing:0.35em;text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+  margin-top:28px;position:relative;z-index:2;
+}
+
+.hero-pill{
+  margin-top:48px;position:relative;z-index:2;
+  display:inline-flex;align-items:center;gap:14px;
+  background:rgba(255,23,68,0.12);
+  border:1px solid rgba(255,23,68,0.4);
+  padding:16px 40px;
+  border-radius:100px;
+  font-family:'Anton',sans-serif;font-size:17px;
+  letter-spacing:0.08em;text-decoration:none;color:#fff;
+  transition:background 0.3s,border-color 0.3s;
+}
+.hero-pill:hover{
+  background:rgba(255,23,68,0.25);
+  border-color:#FF1744;
+}
+.hero-pill span{color:#FF1744;}
+
+.scroll-hint{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  color:rgba(255,255,255,0.2);
+  font-size:10px;letter-spacing:0.4em;text-transform:uppercase;
+  z-index:2;
+}
+.scroll-line{
+  width:1px;height:50px;
+  background:linear-gradient(to bottom, rgba(255,23,68,0.6), transparent);
+}
+
+/* MARQUEE */
+.marquee-wrap{
+  overflow:hidden;
+  padding:32px 0;
+  border-top:1px solid rgba(255,255,255,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  margin:0;
+}
+.marquee-track{
+  display:flex;white-space:nowrap;
+  animation:march 25s linear infinite;
+}
+.marquee-track:hover{animation-play-state:paused;}
+.m-word{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(36px,5vw,56px);
+  color:rgba(255,255,255,0.06);
+  padding:0 32px;
+  transition:color 0.3s;
+}
+.m-word.hot{color:#FF1744;opacity:0.7;}
+.m-dot{color:rgba(255,23,68,0.5);padding:0 16px;}
+@keyframes march{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+
+/* SHADES */
+#shades{
+  padding:120px 40px;
+  max-width:1300px;margin:0 auto;
+}
+.section-head{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(52px,9vw,110px);
+  line-height:0.88;
+  margin-bottom:70px;
+}
+.section-head .dim{
+  -webkit-text-stroke:1px rgba(255,255,255,0.2);
+  color:transparent;
+}
+
+.shades-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:16px;
+}
+.shade-card{
+  aspect-ratio:3/4;
+  border-radius:20px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;
+  padding:18px 12px;
+  position:relative;overflow:hidden;
+  border:1px solid transparent;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),border-color 0.3s;
+  cursor:none;
+}
+.shade-card:hover{
+  transform:scale(1.06) rotate(-1.5deg);
+}
+.shade-glow{
+  position:absolute;
+  width:70%;aspect-ratio:1;border-radius:50%;
+  top:18%;left:50%;transform:translateX(-50%);
+  opacity:0.85;
+  transition:opacity 0.3s;
+}
+.shade-card:hover .shade-glow{opacity:1;}
+.shade-glow-ring{
+  position:absolute;
+  width:70%;aspect-ratio:1;border-radius:50%;
+  top:18%;left:50%;transform:translateX(-50%);
+  opacity:0.2;filter:blur(20px);
+}
+.shade-name{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(11px,1.1vw,14px);
+  letter-spacing:0.04em;
+  text-align:center;
+  position:relative;z-index:2;
+  line-height:1.2;
+}
+.shade-code{
+  font-size:10px;letter-spacing:0.25em;
+  color:rgba(255,255,255,0.3);
+  position:relative;z-index:2;
+  margin-top:3px;
+}
+
+/* PACK */
+#pack{
+  padding:120px 40px;
+  position:relative;overflow:hidden;
+}
+.pack-bg-text{
+  position:absolute;
+  font-family:'Anton',sans-serif;
+  font-size:clamp(160px,28vw,380px);
+  color:rgba(255,255,255,0.018);
+  white-space:nowrap;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;letter-spacing:-0.02em;
+  user-select:none;
+}
+
+.pack-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+}
+
+.pack-tubes{
+  display:flex;align-items:center;
+  justify-content:center;gap:24px;
+  position:relative;
+}
+.tube{
+  width:90px;height:220px;
+  border-radius:45px;
+  position:relative;
+  flex-shrink:0;
+}
+.tube::before{
+  content:'';
+  position:absolute;
+  top:12px;left:12px;right:12px;
+  height:35%;
+  border-radius:30px;
+  background:rgba(255,255,255,0.15);
+}
+.tube-label{
+  position:absolute;
+  bottom:-40px;left:50%;transform:translateX(-50%);
+  font-size:10px;letter-spacing:0.3em;
+  color:rgba(255,255,255,0.3);
+  white-space:nowrap;
+  text-transform:uppercase;
+}
+
+.pack-content{}
+.pack-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(255,23,68,0.5);
+  background:rgba(255,23,68,0.08);
+  color:#FF1744;
+  padding:7px 18px;border-radius:100px;
+  font-size:11px;letter-spacing:0.35em;text-transform:uppercase;
+  margin-bottom:28px;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:#FF1744;}
+
+.pack-title{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(60px,9vw,120px);
+  line-height:0.86;
+  margin-bottom:28px;
+}
+.pack-title .outline{
+  -webkit-text-stroke:2px rgba(255,255,255,0.3);
+  color:transparent;display:block;
+}
+
+.pack-desc{
+  font-size:16px;color:rgba(255,255,255,0.5);
+  line-height:1.75;margin-bottom:48px;
+  max-width:400px;
+}
+
+.price-row{
+  display:flex;align-items:baseline;gap:16px;
+  margin-bottom:40px;
+}
+.price-main{
+  font-family:'Anton',sans-serif;
+  font-size:80px;color:#FF1744;line-height:1;
+}
+.price-per{
+  font-size:14px;letter-spacing:0.15em;
+  color:rgba(255,255,255,0.3);
+  text-transform:uppercase;
+}
+
+.shade-picker{
+  display:flex;gap:8px;flex-wrap:wrap;
+  margin-bottom:48px;
+}
+.shade-dot{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid transparent;
+  transition:transform 0.2s,border-color 0.2s;
+  cursor:none;
+}
+.shade-dot:hover{
+  transform:scale(1.3);
+  border-color:rgba(255,255,255,0.6);
+}
+
+.buy-now{
+  display:inline-flex;align-items:center;gap:16px;
+  background:#FF1744;color:#fff;
+  padding:22px 56px;border-radius:100px;
+  font-family:'Anton',sans-serif;font-size:20px;
+  letter-spacing:0.08em;text-decoration:none;
+  transition:transform 0.25s,box-shadow 0.25s;
+  border:none;cursor:none;
+}
+.buy-now:hover{
+  transform:scale(1.04);
+  box-shadow:0 20px 60px rgba(255,23,68,0.4);
+}
+.buy-now .arrow{
+  display:inline-block;
+  transition:transform 0.25s;
+}
+.buy-now:hover .arrow{transform:translateX(6px);}
+
+/* PROOF BAR */
+.proof-bar{
+  max-width:1200px;margin:0 auto 120px;
+  padding:0 40px;
+  display:flex;gap:60px;align-items:center;
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding-top:60px;
+}
+.proof-item{}
+.proof-num{
+  font-family:'Anton',sans-serif;
+  font-size:52px;color:#FF1744;line-height:1;
+}
+.proof-label{
+  font-size:12px;letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.3);
+  margin-top:4px;
+}
+
+/* FINAL */
+#final{
+  height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:40px;
+  position:relative;overflow:hidden;
+}
+.final-title{
+  font-family:'Anton',sans-serif;
+  font-size:clamp(70px,15vw,200px);
+  line-height:0.82;
+  margin-bottom:52px;
+}
+.final-title .r{color:#FF1744;}
+.final-title .o{
+  -webkit-text-stroke:2px rgba(255,255,255,0.2);
+  color:transparent;display:block;
+}
+.final-title .w{display:block;}
+
+.final-sub{
+  font-size:14px;letter-spacing:0.25em;
+  color:rgba(255,255,255,0.25);
+  margin-top:24px;text-transform:uppercase;
+}
+
+footer{
+  text-align:center;padding:40px;
+  font-size:11px;letter-spacing:0.2em;
+  color:rgba(255,255,255,0.15);
+  text-transform:uppercase;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<nav>
+  <span class="nav-logo">LUNAGLOW</span>
+  <a href="#pack" class="nav-cta">Shop Now</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="blob" id="b1" style="width:500px;height:500px;background:#FF1744;top:5%;left:-5%;opacity:0.12;"></div>
+  <div class="blob" id="b2" style="width:400px;height:400px;background:#E040FB;bottom:10%;right:-5%;opacity:0.1;"></div>
+  <div class="blob" id="b3" style="width:300px;height:300px;background:#FF6D00;bottom:20%;left:20%;opacity:0.08;"></div>
+
+  <p class="hero-eyebrow" id="ey">The Lip Oil Collection</p>
+  <h1 class="hero-title">
+    <span class="t1" id="t1">LUNA</span>
+    <span class="t2" id="t2">GLOW</span>
+  </h1>
+  <p class="hero-sub" id="hs">10 Shades &nbsp;·&nbsp; Non-Stop Shine &nbsp;·&nbsp; Ships USA</p>
+  <a href="https://lunaglow-5678.myshopify.com/products/bestie-duo" class="hero-pill" id="hp">
+    Get the Bestie Duo &nbsp;<span>$24.99</span>
+  </a>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="m-word">CHERRY</span><span class="m-dot">✦</span>
+    <span class="m-word hot">BESTIE DUO</span><span class="m-dot">✦</span>
+    <span class="m-word">BERRY</span><span class="m-dot">✦</span>
+    <span class="m-word">CORAL</span><span class="m-dot">✦</span>
+    <span class="m-word hot">$24.99</span><span class="m-dot">✦</span>
+    <span class="m-word">MAHOGANY</span><span class="m-dot">✦</span>
+    <span class="m-word">RASPBERRY</span><span class="m-dot">✦</span>
+    <span class="m-word hot">LUNAGLOW</span><span class="m-dot">✦</span>
+    <span class="m-word">ROSEWOOD</span><span class="m-dot">✦</span>
+    <span class="m-word">MOONLIGHT</span><span class="m-dot">✦</span>
+    <span class="m-word hot">PICK YOUR DUO</span><span class="m-dot">✦</span>
+    <span class="m-word">CHERRY</span><span class="m-dot">✦</span>
+    <span class="m-word hot">BESTIE DUO</span><span class="m-dot">✦</span>
+    <span class="m-word">BERRY</span><span class="m-dot">✦</span>
+    <span class="m-word">CORAL</span><span class="m-dot">✦</span>
+    <span class="m-word hot">$24.99</span><span class="m-dot">✦</span>
+    <span class="m-word">MAHOGANY</span><span class="m-dot">✦</span>
+    <span class="m-word">RASPBERRY</span><span class="m-dot">✦</span>
+    <span class="m-word hot">LUNAGLOW</span><span class="m-dot">✦</span>
+    <span class="m-word">ROSEWOOD</span><span class="m-dot">✦</span>
+    <span class="m-word">MOONLIGHT</span><span class="m-dot">✦</span>
+    <span class="m-word hot">PICK YOUR DUO</span><span class="m-dot">✦</span>
+  </div>
+</div>
+
+<!-- SHADES -->
+<section id="shades">
+  <h2 class="section-head" id="sh">
+    10 SHADES.<br><span class="dim">ZERO EXCUSES.</span>
+  </h2>
+  <div class="shades-grid" id="sg"></div>
+</section>
+
+<!-- PACK -->
+<section id="pack">
+  <div class="pack-bg-text">BESTIE DUO</div>
+  <div class="pack-inner">
+    <div class="pack-tubes" id="pt">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="tube" id="tube1" style="background:linear-gradient(160deg,#FF1744,#9b0011);box-shadow:0 30px 80px rgba(255,23,68,0.35);"></div>
+        <div class="tube-label">Cherry Nova</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div class="tube" id="tube2" style="background:linear-gradient(160deg,#E040FB,#8400a3);transform:rotate(6deg) translateY(-30px);box-shadow:0 30px 80px rgba(224,64,251,0.3);"></div>
+        <div class="tube-label" style="transform:rotate(6deg);">Berry Eclipse</div>
+      </div>
+    </div>
+
+    <div class="pack-content">
+      <div class="pack-badge" id="pb"><div class="badge-dot"></div>Most Popular</div>
+      <h2 class="pack-title" id="pti">
+        BESTIE<br>
+        <span class="outline">DUO</span>
+      </h2>
+      <p class="pack-desc" id="pd">Two lip oils. Two vibes. One unstoppable combo. Pick any two shades and glow together — because everything's better with your bestie.</p>
+      <div class="price-row" id="pr">
+        <span class="price-main">$24.99</span>
+        <span class="price-per">Free shipping over $35</span>
+      </div>
+      <div class="shade-picker" id="sp"></div>
+      <a href="https://lunaglow-5678.myshopify.com/products/bestie-duo" class="buy-now" id="bn">
+        Shop Bestie Duo <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<div class="proof-bar" id="proofbar">
+  <div class="proof-item">
+    <div class="proof-num" id="pn1">10</div>
+    <div class="proof-label">Shades Available</div>
+  </div>
+  <div class="proof-item">
+    <div class="proof-num" id="pn2">455</div>
+    <div class="proof-label">Units in Stock</div>
+  </div>
+  <div class="proof-item">
+    <div class="proof-num" id="pn3">USA</div>
+    <div class="proof-label">Ships To</div>
+  </div>
+  <div class="proof-item" style="margin-left:auto;">
+    <div style="font-size:13px;color:rgba(255,255,255,0.4);line-height:1.8;max-width:260px;">
+      "The gloss that keeps on giving — obsessed with Berry Eclipse + Cherry Nova together."
+    </div>
+  </div>
+</div>
+
+<!-- FINAL -->
+<section id="final">
+  <div class="blob" style="width:600px;height:600px;background:#FF1744;top:20%;left:-10%;opacity:0.08;filter:blur(100px);"></div>
+  <div class="blob" style="width:500px;height:500px;background:#E040FB;bottom:10%;right:-10%;opacity:0.07;filter:blur(100px);"></div>
+  <h2 class="final-title" id="ft">
+    <span class="r">GET</span>
+    <span class="o">YOUR</span>
+    <span class="w">DUO</span>
+  </h2>
+  <a href="https://lunaglow-5678.myshopify.com/products/bestie-duo" class="buy-now" style="font-size:22px;padding:26px 70px;" id="fbn">
+    Shop Now — $24.99 <span class="arrow">→</span>
+  </a>
+  <p class="final-sub">Free shipping · Ships from USA · 10 shades available</p>
+</section>
+
+<footer>© 2026 LunaGlow · All Rights Reserved · Made with 💋</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+const shades = [
+  {num:'000',name:'Moonlight',   color:'#F0EEE8',bg:'#111118',glow:'#9090a0'},
+  {num:'001',name:'Pink Cloud',  color:'#FF80AB',bg:'#1a0410',glow:'#FF80AB'},
+  {num:'004',name:'Sunset Coral',color:'#FF6E40',bg:'#1a0800',glow:'#FF6E40'},
+  {num:'006',name:'Violet Hour', color:'#CE93D8',bg:'#140018',glow:'#CE93D8'},
+  {num:'007',name:'Berry Eclipse',color:'#E040FB',bg:'#18001e',glow:'#E040FB'},
+  {num:'012',name:'Rosewood Dusk',color:'#E57373',bg:'#1a0505',glow:'#E57373'},
+  {num:'015',name:'Cherry Nova', color:'#FF1744',bg:'#1a0000',glow:'#FF1744'},
+  {num:'016',name:'Mint Halo',   color:'#69F0AE',bg:'#001810',glow:'#69F0AE'},
+  {num:'017',name:'Blue Moon',   color:'#40C4FF',bg:'#001520',glow:'#40C4FF'},
+  {num:'020',name:'Mahogany Mid.',color:'#C2885A',bg:'#120600',glow:'#C2885A'},
+];
+
+// Build shade grid
+const sg = document.getElementById('sg');
+shades.forEach(s=>{
+  const d = document.createElement('div');
+  d.className = 'shade-card';
+  d.style.background = s.bg;
+  d.style.borderColor = s.color+'22';
+  d.innerHTML = `
+    <div class="shade-glow-ring" style="background:${s.glow};"></div>
+    <div class="shade-glow" style="background:radial-gradient(circle at 40% 35%, ${s.color}dd, ${s.color}88);box-shadow:0 0 50px ${s.glow}66;"></div>
+    <div class="shade-name">${s.name}</div>
+    <div class="shade-code">${s.num}</div>
+  `;
+  sg.appendChild(d);
+  d.addEventListener('mouseenter',()=>{
+    ring.classList.add('hover');
+    d.style.borderColor = s.color+'66';
+  });
+  d.addEventListener('mouseleave',()=>{
+    ring.classList.remove('hover');
+    d.style.borderColor = s.color+'22';
+  });
+});
+
+// Build shade picker
+const sp = document.getElementById('sp');
+shades.forEach(s=>{
+  const dot = document.createElement('div');
+  dot.className = 'shade-dot';
+  dot.style.background = s.color;
+  dot.title = s.name;
+  sp.appendChild(dot);
+});
+
+// Custom cursor
+const cur = document.getElementById('cur');
+const ring = document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx-5+'px';
+  cur.style.top=my-5+'px';
+});
+(function loop(){
+  rx+=(mx-rx-18)*0.1;
+  ry+=(my-ry-18)*0.1;
+  ring.style.left=rx+'px';
+  ring.style.top=ry+'px';
+  requestAnimationFrame(loop);
+})();
+
+document.querySelectorAll('a,.shade-card,.shade-dot,.buy-now').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
+});
+
+// GSAP
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero entrance
+const htl = gsap.timeline({defaults:{ease:'power4.out'}});
+htl.from('#ey',   {y:30,opacity:0,duration:0.7,delay:0.2})
+   .from('#t1',   {y:100,opacity:0,duration:0.9},'-=0.3')
+   .from('#t2',   {y:100,opacity:0,duration:0.9},'-=0.6')
+   .from('#hs',   {y:30,opacity:0,duration:0.7},'-=0.4')
+   .from('#hp',   {y:20,opacity:0,duration:0.6},'-=0.3')
+   .from('#b1,#b2,#b3',{scale:0,opacity:0,stagger:0.15,duration:1.5,ease:'power2.out'},'-=1');
+
+// Blobs parallax
+gsap.to('#b1',{y:-120,scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:1.5}});
+gsap.to('#b2',{y:-80,scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:2}});
+
+// Shades
+gsap.from('#sh',{
+  scrollTrigger:{trigger:'#shades',start:'top 75%'},
+  y:80,opacity:0,duration:1,ease:'power3.out'
+});
+gsap.from('.shade-card',{
+  scrollTrigger:{trigger:'#sg',start:'top 80%'},
+  y:80,opacity:0,scale:0.75,
+  stagger:{amount:0.7,from:'start'},
+  duration:0.65,ease:'back.out(1.4)'
+});
+
+// Pack
+gsap.from('#tube1',{
+  scrollTrigger:{trigger:'#pack',start:'top 65%'},
+  x:-120,opacity:0,rotation:-25,
+  duration:1.1,ease:'elastic.out(1,0.65)'
+});
+gsap.from('#tube2',{
+  scrollTrigger:{trigger:'#pack',start:'top 65%'},
+  x:120,opacity:0,rotation:25,
+  duration:1.1,ease:'elastic.out(1,0.65)',delay:0.12
+});
+gsap.from('#pb,#pti,#pd',{
+  scrollTrigger:{trigger:'#pack',start:'top 55%'},
+  y:50,opacity:0,stagger:0.15,
+  duration:0.8,ease:'power3.out',delay:0.2
+});
+gsap.from('#pr',{
+  scrollTrigger:{trigger:'#pack',start:'top 50%'},
+  scale:0.5,opacity:0,duration:0.7,ease:'back.out(2)',delay:0.5
+});
+gsap.from('#sp,#bn',{
+  scrollTrigger:{trigger:'#pack',start:'top 45%'},
+  y:30,opacity:0,stagger:0.1,duration:0.6,delay:0.7
+});
+
+// Proof bar
+gsap.from('.proof-item',{
+  scrollTrigger:{trigger:'#proofbar',start:'top 80%'},
+  y:40,opacity:0,stagger:0.12,duration:0.7,ease:'power3.out'
+});
+
+// Final
+gsap.from('#ft',{
+  scrollTrigger:{trigger:'#final',start:'top 65%'},
+  y:120,opacity:0,duration:1.1,ease:'power4.out'
+});
+gsap.from('#fbn',{
+  scrollTrigger:{trigger:'#final',start:'top 55%'},
+  y:30,opacity:0,duration:0.7,delay:0.4
+});
+
+// Floating tubes loop
+gsap.to('#tube1',{y:-18,duration:2.2,ease:'sine.inOut',yoyo:true,repeat:-1});
+gsap.to('#tube2',{y:14,duration:2.8,ease:'sine.inOut',yoyo:true,repeat:-1,delay:0.7});
+
+// Buy button pulse
+gsap.to('.buy-now',{
+  boxShadow:'0 0 50px rgba(255,23,68,0.45)',
+  duration:1.8,ease:'sine.inOut',yoyo:true,repeat:-1
+});
+</script>
+</body>
+</html>
