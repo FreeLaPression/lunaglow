@@ -112,6 +112,55 @@ nav{position:fixed;top:0;left:0;right:0;padding:20px 5vw;display:flex;justify-co
 .final-title .o{-webkit-text-stroke:2px rgba(255,255,255,.18);color:transparent;display:block;}
 .final-sub{margin-top:24px;font-size:12px;letter-spacing:.25em;color:rgba(255,255,255,.2);text-transform:uppercase;}
 footer{text-align:center;padding:32px 5vw;font-size:11px;letter-spacing:.2em;color:rgba(255,255,255,.12);text-transform:uppercase;border-top:1px solid rgba(255,255,255,.05);background:#060606;}
+
+/* ── DUO SELECTOR ── */
+.duo-label{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px;}
+.shade-picker{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+.shade-dot{
+  width:30px;height:30px;border-radius:50%;
+  border:2px solid transparent;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  cursor:pointer;position:relative;flex-shrink:0;
+}
+.shade-dot:hover{transform:scale(1.25);}
+.shade-dot.selected{
+  border-color:#fff;
+  box-shadow:0 0 0 3px rgba(255,255,255,.2);
+  transform:scale(1.15);
+}
+.shade-dot.selected::after{
+  content:'';position:absolute;
+  inset:-2px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.6);
+  animation:ring-pulse 1.5s ease-out infinite;
+}
+@keyframes ring-pulse{
+  0%{transform:scale(1);opacity:.8;}
+  100%{transform:scale(1.5);opacity:0;}
+}
+.duo-summary{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:32px;
+  padding:16px 20px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  background:rgba(255,255,255,.03);
+  min-height:72px;
+}
+.duo-slot{display:flex;align-items:center;gap:10px;flex:1;}
+.duo-slot-inner{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.08);
+  border:2px dashed rgba(255,255,255,.2);
+  flex-shrink:0;
+  transition:background .3s,border-color .3s,box-shadow .3s;
+}
+.duo-slot-inner.filled{border-style:solid;border-color:rgba(255,255,255,.4);}
+.duo-slot span{font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,.4);transition:color .3s;white-space:nowrap;}
+.duo-slot span.filled{color:rgba(255,255,255,.85);}
+.duo-plus{font-family:'Anton',sans-serif;font-size:28px;color:rgba(255,255,255,.15);}
+.buy-now{transition:opacity .3s,transform .25s,box-shadow .25s!important;}
+.buy-now.active{opacity:1!important;pointer-events:all!important;}
 </style>
 </head>
 <body>
@@ -368,8 +417,17 @@ footer{text-align:center;padding:32px 5vw;font-size:11px;letter-spacing:.2em;col
         <span class="price-main">$24.99</span>
         <span class="price-per">Free shipping over $35</span>
       </div>
+      <!-- SELECTOR DUO -->
+      <div class="duo-label" id="duo-label">Pick your 2 shades:</div>
       <div class="shade-picker" id="sp"></div>
-      <a href="https://lunaglow-5678.myshopify.com/products/bestie-duo" class="buy-now" id="bn">Shop Bestie Duo <span class="arrow">→</span></a>
+      <div class="duo-summary" id="duo-summary">
+        <div class="duo-slot" id="slot1"><div class="duo-slot-inner" id="slot1-inner"></div><span id="slot1-name">—</span></div>
+        <div class="duo-plus">+</div>
+        <div class="duo-slot" id="slot2"><div class="duo-slot-inner" id="slot2-inner"></div><span id="slot2-name">—</span></div>
+      </div>
+      <a href="https://lunaglow-5678.myshopify.com/products/bestie-duo" class="buy-now" id="bn" style="opacity:.35;pointer-events:none;">
+        Choose 2 shades <span class="arrow">→</span>
+      </a>
     </div>
   </div>
 </section>
@@ -456,8 +514,83 @@ shades.forEach(s=>{
   d.innerHTML=`<div class="shade-glow-ring" style="background:${s.glow};"></div><div class="shade-glow" style="background:radial-gradient(circle at 40% 35%,${s.color}dd,${s.color}88);box-shadow:0 0 40px ${s.glow}55;"></div><div class="shade-name">${s.name}</div><div class="shade-code">${s.num}</div>`;
   sg.appendChild(d);
 });
+// ── DUO SELECTOR LOGIC ──
 const sp=document.getElementById('sp');
-shades.forEach(s=>{const dot=document.createElement('div');dot.className='shade-dot';dot.style.background=s.color;dot.title=s.name;sp.appendChild(dot);});
+const bn=document.getElementById('bn');
+const slot1Inner=document.getElementById('slot1-inner');
+const slot2Inner=document.getElementById('slot2-inner');
+const slot1Name=document.getElementById('slot1-name');
+const slot2Name=document.getElementById('slot2-name');
+let selected=[];
+
+function updateSummary(){
+  // Slot 1
+  if(selected[0]){
+    slot1Inner.style.background=selected[0].color;
+    slot1Inner.style.boxShadow='0 0 14px '+selected[0].color+'88';
+    slot1Inner.classList.add('filled');
+    slot1Name.textContent=selected[0].name;
+    slot1Name.classList.add('filled');
+  } else {
+    slot1Inner.style.background='rgba(255,255,255,.08)';
+    slot1Inner.style.boxShadow='none';
+    slot1Inner.classList.remove('filled');
+    slot1Name.textContent='—';
+    slot1Name.classList.remove('filled');
+  }
+  // Slot 2
+  if(selected[1]){
+    slot2Inner.style.background=selected[1].color;
+    slot2Inner.style.boxShadow='0 0 14px '+selected[1].color+'88';
+    slot2Inner.classList.add('filled');
+    slot2Name.textContent=selected[1].name;
+    slot2Name.classList.add('filled');
+  } else {
+    slot2Inner.style.background='rgba(255,255,255,.08)';
+    slot2Inner.style.boxShadow='none';
+    slot2Inner.classList.remove('filled');
+    slot2Name.textContent='—';
+    slot2Name.classList.remove('filled');
+  }
+  // Buy button
+  if(selected.length===2){
+    bn.classList.add('active');
+    bn.innerHTML='Shop Bestie Duo — '+selected[0].name+' + '+selected[1].name+' <span class="arrow">→</span>';
+  } else {
+    bn.classList.remove('active');
+    const remaining=2-selected.length;
+    bn.innerHTML=(remaining===2?'Choose 2 shades':'Choose 1 more shade')+' <span class="arrow">→</span>';
+  }
+}
+
+shades.forEach(s=>{
+  const dot=document.createElement('div');
+  dot.className='shade-dot';
+  dot.style.background=s.color;
+  dot.title=s.name;
+  dot.addEventListener('click',()=>{
+    const idx=selected.findIndex(x=>x.num===s.num);
+    if(idx>-1){
+      // Deselect
+      selected.splice(idx,1);
+      dot.classList.remove('selected');
+    } else {
+      if(selected.length>=2){
+        // Remove first selected, deselect its dot
+        const removed=selected.shift();
+        document.querySelectorAll('.shade-dot').forEach(d=>{
+          if(d.title===removed.name) d.classList.remove('selected');
+        });
+      }
+      selected.push(s);
+      dot.classList.add('selected');
+    }
+    updateSummary();
+    // Shake animation if tried to pick 3rd
+  });
+  sp.appendChild(dot);
+});
+updateSummary();
 
 // Cursor
 const cur=document.getElementById('cur'),ring=document.getElementById('ring');
@@ -529,6 +662,30 @@ gsap.to('#ff1,#ff2,#ff3,#ff4',{y:-40,stagger:.1,scrollTrigger:{trigger:'#final',
 gsap.to('#tube1',{y:-18,duration:2.2,ease:'sine.inOut',yoyo:true,repeat:-1});
 gsap.to('#tube2',{y:14,duration:2.8,ease:'sine.inOut',yoyo:true,repeat:-1,delay:.7});
 gsap.to('.buy-now',{boxShadow:'0 0 50px rgba(255,23,68,.4)',duration:1.8,ease:'sine.inOut',yoyo:true,repeat:-1});
+
+// ── TOUCH PARTICLES (mobile) ──
+function spawnParticles(x, y){
+  const colors=['#FF1744','#E040FB','#FF6D00','#FF80AB','#69F0AE','#40C4FF','#FF9955','#E8004D','#CE93D8'];
+  const count = 10 + Math.floor(Math.random()*6);
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    const size=4+Math.random()*8;
+    const color=colors[Math.floor(Math.random()*colors.length)];
+    const angle=Math.random()*360;
+    const dist=40+Math.random()*80;
+    const tx=Math.cos(angle*Math.PI/180)*dist;
+    const ty=Math.sin(angle*Math.PI/180)*dist;
+    el.style.cssText=`position:fixed;width:${size}px;height:${size}px;border-radius:50%;background:${color};pointer-events:none;z-index:99999;left:${x-size/2}px;top:${y-size/2}px;transform:translate(0,0) scale(1);`;
+    document.body.appendChild(el);
+    el.animate([
+      {transform:'translate(0,0) scale(1)',opacity:1},
+      {transform:`translate(${tx}px,${ty}px) scale(0)`,opacity:0}
+    ],{duration:600+Math.random()*400,easing:'cubic-bezier(0,.9,.57,1)',fill:'forwards'}).onfinish=()=>el.remove();
+  }
+}
+document.addEventListener('touchstart',e=>{
+  Array.from(e.touches).forEach(t=>spawnParticles(t.clientX,t.clientY));
+},{passive:true});
 </script>
 </body>
 </html>
